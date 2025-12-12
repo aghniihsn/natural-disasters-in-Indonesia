@@ -14,25 +14,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Base Colors: Soft Light Theme */
         body { 
-            background-color: #f8fafc; /* Slate-50 (Putih Sejuk) */
+            background-color: #f8fafc; 
             font-family: 'Segoe UI', sans-serif; 
-            color: #1e293b; /* Slate-800 (Abu Tua) */
+            color: #1e293b;
         }
         
         .fade-in { animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Glass Card Light Version */
         .glass-card {
-            background: rgba(255, 255, 255, 0.7); /* Putih Transparan */
+            background: rgba(255, 255, 255, 0.7); 
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1); /* Bayangan Halus */
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1); 
         }
         
-        /* Marquee Text */
         .marquee-container { overflow: hidden; white-space: nowrap; position: relative; }
         .marquee-content { display: inline-block; animation: marquee 30s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
@@ -186,21 +183,17 @@
         }
 
         function initMap() {
-            // Koordinat Tengah
             var lat = 4.29; 
             var lng = 97.97; 
 
             map = L.map('map', { zoomControl: false }).setView([lat, lng], 9);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            // Layer Satelit Tetap (Paling Cocok untuk Deforestasi)
-            // Meskipun UI Light, Peta Satelit memberikan kontras terbaik untuk melihat hutan vs tanah gundul
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 attribution: 'Tiles &copy; Esri',
                 maxZoom: 16
             }).addTo(map);
 
-            // DATA DUMMY: Poligon Deforestasi
             var deforestationAreas = [
                 [[4.25, 97.85], [4.35, 97.80], [4.40, 97.90], [4.30, 97.95]],
                 [[3.90, 98.10], [4.00, 98.05], [4.10, 98.15], [4.00, 98.25]]
@@ -208,14 +201,13 @@
 
             deforestationAreas.forEach(coords => {
                 L.polygon(coords, {
-                    color: '#dc2626', // Red-600
+                    color: '#dc2626', 
                     weight: 2,
                     fillColor: '#b91c1c',
                     fillOpacity: 0.5,
                 }).addTo(map).bindPopup("<b>ZONA KRITIS HULU</b><br>Alih fungsi lahan masif terdeteksi.");
             });
 
-            // MARKER TITIK BENCANA
             var disasterLocations = [
                 { coords: [4.46, 97.97], title: "Aceh Tamiang (Pusat Pengungsian)", info: "238 Ribu Pengungsi" },
                 { coords: [3.58, 98.67], title: "Deli Serdang (Sumut)", info: "Banjir Bandang & Longsor" },
