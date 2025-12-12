@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>🚨 UPDATE: 990 Tewas - Bencana Banjir Sumatera 2025</title>
-    <meta name="description" content="Data terkini BNPB/Detikcom: 990 Korban Jiwa, 222 Hilang, 800 Ribu Mengungsi.">
-    <meta property="og:title" content="🚨 Bencana Nasional: 990 Jiwa Melayang di Sumatera">
+    <title>🚨 Peta Sebaran Bencana Sumatera 2025 - Data BNPB</title>
+    <meta name="description" content="Dashboard Monitoring Bencana Sumatera. Sumber: GIS BNPB. 990 Korban Jiwa, 800rb Pengungsi.">
+    <meta property="og:title" content="🚨 Monitoring Bencana Sumatera 2025 (Data BNPB)">
+    <meta property="og:description" content="Peta sebaran titik banjir dan longsor di Aceh, Sumut, dan Sumbar.">
     <meta property="og:image" content="https://akcdn.detik.net.id/visual/2024/12/12/banjir-aceh_169.jpeg">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,151 +15,155 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { 
-            background-color: #f8fafc; 
-            font-family: 'Segoe UI', sans-serif; 
-            color: #1e293b;
-        }
+        body { background-color: #f8fafc; font-family: 'Segoe UI', sans-serif; color: #334155; }
         
         .fade-in { animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         .glass-card {
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1); 
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(148, 163, 184, 0.15);
         }
         
         .marquee-container { overflow: hidden; white-space: nowrap; position: relative; }
-        .marquee-content { display: inline-block; animation: marquee 30s linear infinite; }
+        .marquee-content { display: inline-block; animation: marquee 35s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        #map { height: 100vh; width: 100%; }
+        #map { height: 100vh; width: 100%; z-index: 0; }
         .hidden-section { display: none; }
+        
+        .leaflet-popup-content-wrapper { background: rgba(255, 255, 255, 0.95); border-radius: 12px; }
+        .leaflet-popup-tip { background: rgba(255, 255, 255, 0.95); }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
     <section id="dashboard-view" class="min-h-screen relative flex flex-col items-center justify-center p-4">
         
-        <div class="absolute inset-0 z-0 opacity-10 bg-[url('https://akcdn.detik.net.id/visual/2023/12/26/banjir-aceh-utara_169.jpeg')] bg-cover bg-center"></div>
-        <div class="absolute inset-0 z-0 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/90 to-[#f8fafc]/40"></div>
+        <div class="absolute inset-0 z-0 opacity-10 bg-[url('https://upload.wikimedia.org/wikipedia/commons/b/bb/Indonesia_Sumatra_location_map.svg')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-white/80 via-white/50 to-slate-100"></div>
 
         <div class="z-10 w-full max-w-5xl fade-in space-y-6">
             
-            <div class="text-center space-y-2">
-                <span class="inline-flex items-center gap-2 bg-red-100 border border-red-200 text-red-600 px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase animate-pulse">
-                    <span class="w-2 h-2 rounded-full bg-red-600"></span> Breaking News: Jumat, 12 Des 2025
-                </span>
-                <h1 class="text-4xl md:text-7xl font-black tracking-tighter text-slate-800">
-                    BENCANA SUMATERA
-                </h1>
-                <p class="text-slate-500 text-sm md:text-base max-w-2xl mx-auto font-medium">
-                    Banjir bandang & longsor melanda 52 Kabupaten/Kota di Utara Sumatera.
-                </p>
+            <div class="text-center space-y-3">
+                <div class="inline-flex items-center gap-2 bg-orange-100 border border-orange-200 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase shadow-sm">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                    </span>
+                    Data GIS BNPB Terintegrasi
+                </div>
                 
-                <div class="flex justify-center mt-2">
-                    <a href="https://news.detik.com/berita/d-8255861/990-orang-jadi-korban-tewas-bencana-sumatera-222-warga-masih-hilang" target="_blank" class="text-xs text-blue-600 hover:text-blue-800 bg-white shadow-sm border border-slate-200 px-3 py-1 rounded-full transition flex items-center gap-1">
-                        <i class="fa-solid fa-link"></i> Sumber: Detik.com / BNPB
-                    </a>
+                <h1 class="text-4xl md:text-6xl font-black tracking-tight text-slate-800 leading-tight">
+                    SITUATION REPORT <br><span class="text-red-600">BENCANA SUMATERA</span>
+                </h1>
+                
+                <div class="flex justify-center items-center gap-2 text-sm text-slate-500 font-medium">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/BNPB_Indonesia_Logo.svg/1200px-BNPB_Indonesia_Logo.svg.png" class="h-6 w-auto" alt="Logo BNPB">
+                    <span>Sumber Data: gis.bnpb.go.id (Update 12/12/2025)</span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div class="glass-card p-6 rounded-2xl border-l-4 border-red-500 relative overflow-hidden group hover:bg-white transition">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition">
-                        <i class="fa-solid fa-skull-crossbones text-6xl text-slate-800"></i>
-                    </div>
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Korban Tewas</p>
-                    <h2 class="text-5xl font-extrabold text-red-600 mt-2">990</h2>
-                    <p class="text-[10px] text-slate-400 mt-2">Update BNPB: 12/12/2025</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-red-500 text-center hover:scale-[1.02] transition">
+                    <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider">Korban Meninggal</h3>
+                    <div class="text-5xl font-black text-slate-800 my-2">990</div>
+                    <span class="bg-red-100 text-red-600 text-[10px] px-2 py-1 rounded-md font-bold">+45 Hari ini</span>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-orange-400 text-center hover:scale-[1.02] transition">
+                    <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider">Dalam Pencarian</h3>
+                    <div class="text-5xl font-black text-slate-800 my-2">222</div>
+                    <span class="bg-orange-100 text-orange-600 text-[10px] px-2 py-1 rounded-md font-bold">Tim SAR Bergerak</span>
                 </div>
 
-                <div class="glass-card p-6 rounded-2xl border-l-4 border-orange-500 relative overflow-hidden group hover:bg-white transition">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition">
-                        <i class="fa-solid fa-person-circle-question text-6xl text-slate-800"></i>
-                    </div>
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Hilang / Pencarian</p>
-                    <h2 class="text-5xl font-extrabold text-orange-500 mt-2">222</h2>
-                    <p class="text-[10px] text-slate-400 mt-2">Tim SAR Gabungan</p>
-                </div>
-
-                <div class="glass-card p-6 rounded-2xl border-l-4 border-blue-500 relative overflow-hidden group hover:bg-white transition">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition">
-                        <i class="fa-solid fa-people-roof text-6xl text-slate-800"></i>
-                    </div>
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Total Pengungsi</p>
-                    <h2 class="text-5xl font-extrabold text-blue-600 mt-2">800<span class="text-2xl">rb</span></h2>
-                    <p class="text-[10px] text-slate-400 mt-2">Terbanyak: Aceh Timur (238rb)</p>
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-blue-500 text-center hover:scale-[1.02] transition">
+                    <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider">Total Pengungsi</h3>
+                    <div class="text-5xl font-black text-slate-800 my-2">800<span class="text-2xl text-slate-400">rb</span></div>
+                    <span class="bg-blue-100 text-blue-600 text-[10px] px-2 py-1 rounded-md font-bold">52 Kab/Kota</span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="glass-card p-5 rounded-xl">
-                    <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-map text-slate-500"></i> Sebaran Korban Jiwa</h3>
-                    <div class="space-y-2 text-sm text-slate-600">
-                        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
-                            <span>📍 Aceh</span>
-                            <span class="font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">407 Jiwa</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
-                            <span>📍 Sumatera Utara</span>
-                            <span class="font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">343 Jiwa</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>📍 Sumatera Barat</span>
-                            <span class="font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">240 Jiwa</span>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="glass-card p-5 rounded-xl col-span-1 lg:col-span-1">
+                    <h4 class="font-bold text-slate-700 text-sm mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-red-500"></i> Fokus Area Terdampak
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex justify-between items-center pb-2 border-b border-slate-100">
+                            <span class="text-slate-600">Aceh Tamiang</span>
+                            <span class="font-bold text-red-600 text-xs bg-red-50 px-2 py-1 rounded">Banjir Luapan</span>
+                        </li>
+                        <li class="flex justify-between items-center pb-2 border-b border-slate-100">
+                            <span class="text-slate-600">Deli Serdang (Sumut)</span>
+                            <span class="font-bold text-orange-600 text-xs bg-orange-50 px-2 py-1 rounded">Longsor</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-slate-600">Agam/Tanah Datar</span>
+                            <span class="font-bold text-slate-600 text-xs bg-slate-100 px-2 py-1 rounded">Lahar Dingin</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="glass-card p-5 rounded-xl flex flex-col justify-center">
-                    <h3 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-house-crack text-slate-500"></i> Dampak Infrastruktur</h3>
-                    <div class="bg-slate-200/50 border border-slate-200 rounded-lg p-2 overflow-hidden relative h-16 flex items-center">
+                <div class="glass-card p-5 rounded-xl col-span-1 lg:col-span-2 flex flex-col justify-center bg-white">
+                    <h4 class="font-bold text-slate-700 text-sm mb-2"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> Kerusakan Infrastruktur</h4>
+                    <div class="bg-slate-50 border border-slate-100 rounded-lg p-3 overflow-hidden relative h-12 flex items-center">
                         <div class="marquee-container w-full">
-                            <div class="marquee-content text-sm text-slate-700 font-semibold font-mono">
-                                <span class="mx-4">⚠️ 498 Jembatan Putus</span>
-                                <span class="mx-4">🏥 219 Faskes Rusak</span>
-                                <span class="mx-4">🏫 581 Sekolah Hancur</span>
-                                <span class="mx-4">🏠 1.200 Fasilitas Umum Rusak</span>
-                                <span class="mx-4">🕌 434 Rumah Ibadah Rusak</span>
-                                <span class="mx-4">🚑 5.400 Orang Luka-luka</span>
+                            <div class="marquee-content text-sm text-slate-600 font-semibold font-mono">
+                                <span class="mx-6">🌉 498 Jembatan Putus</span>
+                                <span class="mx-6">🏥 219 Puskesmas/RS Rusak</span>
+                                <span class="mx-6">🏫 581 Sekolah Terendam</span>
+                                <span class="mx-6">🕌 434 Rumah Ibadah Rusak</span>
+                                <span class="mx-6">🏠 12.500 Rumah Hanyut</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button onclick="showMap()" class="w-full py-4 mt-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-xl shadow-slate-300 transition-all transform hover:scale-[1.01] flex items-center justify-center gap-3 cursor-pointer">
-                <span>ANALISIS SPASIAL: LIHAT PETA PENYEBAB</span>
-                <i class="fa-solid fa-satellite"></i>
+            <button onclick="showMap()" class="w-full py-4 mt-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 group cursor-pointer">
+                <span>LIHAT PETA SEBARAN (GIS)</span>
+                <i class="fa-solid fa-map-location-dot group-hover:scale-110 transition"></i>
             </button>
         </div>
     </section>
 
     <section id="map-view" class="h-screen w-screen relative hidden-section bg-slate-100">
         
-        <div class="absolute top-0 left-0 right-0 z-[1000] p-4 flex justify-between items-start pointer-events-none">
-            <button onclick="hideMap()" class="pointer-events-auto bg-white hover:bg-slate-50 text-slate-800 px-4 py-2 rounded-lg shadow-lg border border-slate-200 flex items-center gap-2 font-semibold text-sm">
-                <i class="fa-solid fa-arrow-left"></i> Kembali
+        <div class="absolute top-4 left-4 right-4 z-[1000] flex justify-between items-start pointer-events-none">
+            <button onclick="hideMap()" class="pointer-events-auto bg-white hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-lg shadow-xl border border-slate-200 flex items-center gap-2 font-bold text-sm transition">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
             </button>
 
-            <div class="pointer-events-auto bg-white/95 p-4 rounded-xl border-l-4 border-red-500 w-64 shadow-2xl">
-                <h4 class="font-bold text-slate-800 text-xs uppercase mb-2">Analisis Citra Satelit</h4>
-                <div class="space-y-2 text-[11px] text-slate-600">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 bg-red-600/60 border border-red-500 block"></span>
-                        Area Deforestasi (Hulu)
+            <div class="pointer-events-auto bg-white/95 p-4 rounded-xl shadow-2xl border border-slate-100 w-72">
+                <div class="flex items-center gap-2 mb-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/BNPB_Indonesia_Logo.svg/1200px-BNPB_Indonesia_Logo.svg.png" class="h-4 w-auto">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase">Layer Bencana BNPB</h4>
+                </div>
+                <div class="space-y-2.5 text-xs text-slate-600">
+                    <div class="flex items-center gap-3 bg-slate-50 p-1.5 rounded border border-slate-100">
+                        <span class="w-3 h-3 rounded-full bg-blue-500 border-2 border-white shadow"></span>
+                        <div>
+                            <p class="font-bold text-slate-800">Banjir (Aceh Tamiang)</p>
+                            <p class="text-[10px]">Status: Siaga 1</p>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-blue-500 border border-white shadow block"></span>
-                        Titik Banjir Terparah
+                    <div class="flex items-center gap-3 bg-slate-50 p-1.5 rounded border border-slate-100">
+                        <span class="w-3 h-3 rounded-full bg-orange-500 border-2 border-white shadow"></span>
+                        <div>
+                            <p class="font-bold text-slate-800">Longsor (Deli Serdang)</p>
+                            <p class="text-[10px]">Akses Jalan Putus</p>
+                        </div>
                     </div>
-                    <hr class="border-slate-200 my-2">
-                    <p class="italic text-slate-500">
-                        "Kerusakan hutan di Bukit Barisan memperparah aliran permukaan (run-off)."
-                    </p>
+                    <div class="flex items-center gap-3 bg-slate-50 p-1.5 rounded border border-slate-100">
+                        <span class="w-3 h-3 rounded-full bg-red-600 border-2 border-white shadow"></span>
+                        <div>
+                            <p class="font-bold text-slate-800">Galodo (Sumatera Barat)</p>
+                            <p class="text-[10px]">Zona Merah</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,7 +178,6 @@
         function showMap() {
             document.getElementById('dashboard-view').style.display = 'none';
             document.getElementById('map-view').style.display = 'block';
-            
             if (!map) initMap();
         }
 
@@ -183,46 +187,83 @@
         }
 
         function initMap() {
-            var lat = 4.29; 
-            var lng = 97.97; 
-
-            map = L.map('map', { zoomControl: false }).setView([lat, lng], 9);
+            var mapCenter = [3.8, 98.5]; 
+            
+            map = L.map('map', { zoomControl: false }).setView(mapCenter, 8);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri',
-                maxZoom: 16
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO',
+                maxZoom: 19
             }).addTo(map);
 
-            var deforestationAreas = [
-                [[4.25, 97.85], [4.35, 97.80], [4.40, 97.90], [4.30, 97.95]],
-                [[3.90, 98.10], [4.00, 98.05], [4.10, 98.15], [4.00, 98.25]]
+            var bnpbData = [
+                {
+                    type: "Banjir",
+                    coords: [4.294, 98.058],
+                    location: "Kab. Aceh Tamiang",
+                    stats: "238.000 Pengungsi",
+                    desc: "Luapan Sungai Tamiang akibat deforestasi hulu.",
+                    color: "#3b82f6"
+                },
+                {
+                    type: "Longsor",
+                    coords: [3.292, 98.561],
+                    location: "Sibolangit, Deli Serdang",
+                    stats: "Jalan Nasional Putus",
+                    desc: "Tebing setinggi 20m longsor menimpa kendaraan.",
+                    color: "#f97316" 
+                },
+                {
+                    type: "Banjir Lahar",
+                    coords: [-0.472, 100.415],
+                    location: "Agam & Tanah Datar",
+                    stats: "240 Korban Jiwa",
+                    desc: "Banjir bandang lahar dingin Gunung Marapi.",
+                    color: "#dc2626" 
+                }
             ];
 
-            deforestationAreas.forEach(coords => {
-                L.polygon(coords, {
-                    color: '#dc2626', 
-                    weight: 2,
-                    fillColor: '#b91c1c',
-                    fillOpacity: 0.5,
-                }).addTo(map).bindPopup("<b>ZONA KRITIS HULU</b><br>Alih fungsi lahan masif terdeteksi.");
-            });
+            bnpbData.forEach(data => {
+                L.circleMarker(data.coords, {
+                    radius: 12,
+                    fillColor: data.color,
+                    color: "#fff",
+                    weight: 3,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map).bindPopup(`
+                    <div style="min-width: 200px;">
+                        <h4 style="margin:0; font-weight:bold; color:#1e293b; font-size:14px;">${data.location}</h4>
+                        <span style="display:inline-block; background:${data.color}; color:white; font-size:10px; padding:2px 6px; border-radius:4px; margin:4px 0;">${data.type}</span>
+                        <p style="margin:5px 0 0; font-size:12px; color:#64748b;">${data.desc}</p>
+                        <hr style="border:0; border-top:1px solid #e2e8f0; margin:8px 0;">
+                        <p style="margin:0; font-size:11px; font-weight:bold;">${data.stats}</p>
+                    </div>
+                `);
 
-            var disasterLocations = [
-                { coords: [4.46, 97.97], title: "Aceh Tamiang (Pusat Pengungsian)", info: "238 Ribu Pengungsi" },
-                { coords: [3.58, 98.67], title: "Deli Serdang (Sumut)", info: "Banjir Bandang & Longsor" },
-                { coords: [-0.94, 100.35], title: "Sumatera Barat", info: "Lahar Dingin & Galodo" }
-            ];
-
-            disasterLocations.forEach(loc => {
-                var icon = L.divIcon({
-                    className: 'custom-icon',
-                    html: "<div style='background-color:#2563eb; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #3b82f6;'></div>", // Blue-600
-                    iconSize: [16, 16]
+                var pulseIcon = L.divIcon({
+                    className: 'pulse-icon',
+                    html: `<div style="
+                        width: 40px; height: 40px; 
+                        background: ${data.color}; 
+                        border-radius: 50%; 
+                        opacity: 0.4; 
+                        animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+                        transform: translate(-50%, -50%);">
+                    </div>`,
+                    iconSize: [0, 0] 
                 });
-                L.marker(loc.coords, {icon: icon}).addTo(map)
-                    .bindPopup(`<b class='text-blue-700'>${loc.title}</b><br>${loc.info}`);
+                L.marker(data.coords, { icon: pulseIcon }).addTo(map);
             });
+            
+            var style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes ping {
+                    75%, 100% { transform: scale(2); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
         }
     </script>
 </body>
